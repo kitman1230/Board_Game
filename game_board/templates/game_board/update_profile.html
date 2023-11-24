@@ -1,0 +1,17 @@
+{% extends 'game_board/base.html' %}
+{% load django_bootstrap5 %}
+
+{% block page_header %}
+<h3>Update my profile</h3>
+{% endblock page_header %}
+
+{% block content %}
+
+    <form action="{% url 'game_board:update_profile' %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class="btn btn-success" type="submit" value="Update Profile">Update</button>
+    </form>
+
+<div class="mb-5"></div>
+{% endblock content %}

@@ -1,0 +1,17 @@
+{% extends "game_board/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block page_header %}
+<h1>Only one step away...</h1>
+{% endblock page_header %}
+
+{% block content %}
+    
+    <form action="{% url 'accounts:register' %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class="btn btn-danger" type="submit" value="Register">Register</button>
+    </form>
+
+<div class="mb-5"></div>
+{% endblock content %}

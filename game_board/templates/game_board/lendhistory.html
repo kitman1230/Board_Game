@@ -1,0 +1,41 @@
+{% extends 'game_board/base.html' %}
+
+{% block page_header %}
+<h1><a style="text-decoration:none" class="link-danger" href="{% url 'game_board:boardgame' boardgame.id %}">{{ boardgame.name }}&raquo;</a> Lending History</h1>
+{% endblock page_header %}
+
+{% block content %}
+
+<div class="table-responsive">
+<table class="table table-hover">
+    <thead class="table-danger">
+    <tr>
+        <th>Lended by</th>
+        <th>Lended Date</th>
+        <th>Return Date</th>
+    </tr>
+    </thead>
+    <tbody class="table-group-divider">
+    {% for loanrecord in loanrecords %}
+    <tr>
+        <td>{{ loanrecord.debit }}</td>
+        <td>{{ loanrecord.date_lended|date:"M d, Y" }}</td>
+        <td>
+            {% if loanrecord.date_return %}
+            {{ loanrecord.date_return|date:"M d, Y" }}
+            {% else %}
+            Not Return yet
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td>None</td>
+        <td>/</td>
+        <td>/</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock content %}

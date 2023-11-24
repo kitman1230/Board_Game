@@ -1,0 +1,18 @@
+{% extends "game_board/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block page_header %}
+<h3>New Board Game</h3>
+<p class="lead">Welcome for sharing your board game</p>
+{% endblock page_header %}
+
+{% block content %}
+
+    <form action='{% url "game_board:new_boardgame" %}' method='post'>
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class="btn btn-danger" type="submit" value="Add New">Share</button>
+    </form>
+
+    <div class="mb-5"></div>
+{% endblock content %}

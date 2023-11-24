@@ -1,0 +1,19 @@
+{% extends 'game_board/base.html' %}
+
+{% block page_header %}
+    <div class="p-3 mb-4 bg-danger text-white border rounded-3">
+        <div class="container-fluid py-4">
+            <h1 class="display-3">Game Board - Your Board Game Dreamland.</h1>
+
+            <p class="lead">we are a group of friends has a lot of board games we are lending to each other and to other people. However, we have difficulties in remembering who has borrowed them. That’s why we need an application making it possible to keep a registry of the board games, board gamers, and the current game loans. Hope you will enjoy it, too.</p>
+            {% if not request.user.is_authenticated %}
+            <a class="btn btn-outline-light btn-lg mt-1" href="{% url 'accounts:register' %}">Register &raquo;</a>&nbsp;&nbsp;&nbsp;<a class="btn btn-outline-light btn-lg mt-1" href="{% url 'accounts:login' %}">Login &raquo;</a>
+            {% else %}
+            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                <a class="btn btn-outline-light btn-lg mt-1" href="{% url 'game_board:boardgames' %}">Board Games</a>
+                <a class="btn btn-outline-light btn-lg mt-1" href="{% url 'game_board:categories' %}">Categories</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock page_header %}

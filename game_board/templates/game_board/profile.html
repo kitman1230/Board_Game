@@ -1,0 +1,82 @@
+{% extends 'game_board/base.html' %}
+
+
+{% block page_header %}
+<h1>Profile</h1>
+{% endblock page_header %}
+
+{% block content %}    
+    <div class="p-2">
+        <table>
+            <tr>
+                <td>First Name:</td>
+                <td>{{ profile.firstname }}</td>
+            </tr>
+            <tr>
+                <td>Last Name:</td>
+                <td>{{ profile.lastname }}</td>
+            </tr>
+            <tr>
+                <td>Birthday:</td>
+                <td>{{ profile.birthday }}</td>
+            </tr>
+            <tr>
+                <td>Bio:</td>
+                <td>{{ profile.bio }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="margin-top: 1rem">
+        <a class="btn btn-success" href="{% url 'game_board:update_profile' %}" method="post">Update Profile</a>
+    </div>
+    <hr />
+    <div class="container mt-4">
+        <div>
+            <h3>My Board Games <i class="bi bi-clock-history"></i></h1>
+            <ul class="list-group border-bottom pb-2 mb-4">
+                {% for boardgame in boardgames %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        {% if boardgame.available_status is True %}
+                        <span class="badge rounded-pill bg-info text-dark">Available</span>
+                        {% else %}
+                        <span class="badge rounded-pill text-bg-secondary">Unavailable - Lend to 
+                            {% for loanrecord in lendout %}
+                                {% if loanrecord.board_game == boardgame %}
+                                    {{ loanrecord.debit.username }}
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        {% endif %}
+                    <a style="text-decoration:none" class="link-danger" href="{% url 'game_board:lendhistory' boardgame.id %}"><strong>{{ boardgame }}</strong>&nbsp;&nbsp;<i class="bi bi-clock-history"></i></a>    
+                    
+                    </div>
+                    {% if boardgame.available_status %}
+                    <a href="{% url 'game_board:remove_boardgame' boardgame.id %}"><button type="button" class="btn btn-sm btn-outline-danger"><i class="bi bi-exclamation-triangle"></i>&nbsp;Remove</button></a>
+                    {% endif %}
+                </li>
+                {% empty %}
+                <li>You have not shared any board game yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div>
+            <h3>My Lended Board Games</h1>
+            <ul class="list-group border-bottom pb-2 mb-4">
+                {% for loanrecord in lendin %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                    <a style="text-decoration:none" class="link-warning" href="{% url 'game_board:boardgame' loanrecord.board_game.id %}">
+                    <strong>{{ loanrecord.board_game }}</strong></a> - {{ loanrecord.date_lended|date:"M d, Y" }} 
+                    </div>
+                    <a href="{% url 'game_board:lendreturn' loanrecord.id %}"><button  type="button" class="btn btn-sm btn-outline-warning">Return Back</button></a>
+                    </li>
+                {% empty %}
+                <li>No lended board game yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock content %}

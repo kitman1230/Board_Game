@@ -1,0 +1,28 @@
+{% extends 'game_board/base.html' %}
+
+{% block page_header %}
+<h1>{{ category.name }}</h1>
+<p class="lead">{{ category.description }}</p>
+{% endblock page_header %}
+
+{% block content %}
+<div class="mt-4 mb-4">
+<h3>Related Board Games:</h3>
+<ul class="list-group border-bottom pb-2 mb-4">
+    {% for boardgame in boardgames %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a style="text-decoration:none" class="link-danger" href="{% url 'game_board:boardgame' boardgame.id %}">
+                <strong>{{ boardgame.name }} &raquo;</strong>
+            </a>
+            {% if boardgame.available_status is True %}
+            <span class="badge rounded-pill bg-info text-dark">Available</span>
+            {% else %}
+            <span class="badge rounded-pill text-bg-secondary">Unavailable</span>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li class="list-group-item border-0">There are no related board game to this category yet.</li>
+    {% endfor %}
+</ul>
+{% endblock content %}
+</div>

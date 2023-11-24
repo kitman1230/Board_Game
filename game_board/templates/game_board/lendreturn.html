@@ -1,0 +1,18 @@
+{% extends 'game_board/base.html' %}
+{% load django_bootstrap5 %}
+
+{% block page_header %}
+<h3>Return <a style="text-decoration: none;" class="link-danger" href="{% url 'game_board:boardgame' boardgame.id %}">{{ boardgame }}&raquo;</a></h3>
+{% endblock page_header %}
+
+{% block content %}
+    <p>on {% now "l, F j, Y" %} </p>
+
+    <form action='{% url "game_board:lendreturn" loanrecord.id %}' method='post'>
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class="btn btn-warning" type="submit" value="Return Game">Return</button>
+    </form>
+
+    <div class="mb-5"></div>
+{% endblock content %}

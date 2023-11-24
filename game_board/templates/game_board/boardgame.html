@@ -1,0 +1,158 @@
+{% extends 'game_board/base.html' %}
+
+{% block page_header %}
+
+<h1>{{ boardgame.name }}
+{% if boardgame.publish_year %}
+({{ boardgame.publish_year }})
+{% endif %}
+</h1>
+
+<p>
+    {% if boardgame.available_status == True %}
+    <span class="badge rounded-pill bg-info text-dark">Available</span> {% if boardgame.owner != request.user.profile %}<a class="btn btn-sm btn-outline-danger" href="{% url 'game_board:lend' boardgame.id %}">Lend</button></a>{% endif %}
+    {% else %}
+    <span class="badge rounded-pill text-bg-secondary">Unavailable</span>
+    {% endif %}
+</p>
+
+{% if boardgame.subtitle %}
+<p class="lead">{{ boardgame.subtitle }}</p>
+{% endif %}
+<div>
+    {% for category in categories %}
+    <a class="btn btn-outline-info btn-sm mt-1" href="{% url 'game_board:category' category.id %}"><span>{{ category }}</span></a>
+    {% empty %}
+    <a class="btn btn-outline-info btn-sm mt-1" href="#"><span>No category</span></a>
+    {% endfor %}
+</div>
+{% endblock page_header %}
+
+{% block content %}
+
+
+
+
+<div class="grid text-center mt-4">
+    <div class="row mb-3">
+
+        <div class="p-1 mb-2 col text-black border border-2 border-start-0 border-top-0 border-bottom-0 border-dark">
+            <span class="fs-4">
+            {{ boardgame.min_players }} {% if boardgame.max_players %}- {{ boardgame.max_players }}{% endif %}
+            </span>
+            <br />
+            <span class="badge rounded-pill text-bg-dark">
+                {% if boardgame.min_players == 1 and not boardgame.max_players %}
+                Player
+                {% else %}
+                Players
+                {% endif %}
+            </span>
+        </div>
+
+
+        <div class="p-1 mb-2 col text-black border border-2 border-start-0 border-top-0 border-bottom-0 border-dark">
+            <span class="fs-4">
+            {{ boardgame.age_limit }}+
+            </span>
+            <br />
+            <span class="badge rounded-pill text-bg-dark">Age Limit</span>
+        </div>
+
+
+        <div class="p-1 mb-2 col text-black text-center border border-2 border-start-0 border-top-0 border-bottom-0 border-dark">
+            <span class="fs-4">
+            {{ boardgame.min_time_period }} {% if boardgame.max_time_peroid %}- {{ board.max_time_peroid }}{% endif %}
+            </span> Min
+            <br />
+            <span class="badge rounded-pill text-bg-dark">Playing Time</span>
+        </div>
+
+        <div class="p-1 mb-2 col text-black border border-2 border-start-0 border-top-0 border-bottom-0 border-end-0 border-dark">
+            <span class="fs-4">
+            {{ boardgame.complexity_rating }}
+            </span>/&nbsp;5
+            <br />
+            <span class="badge rounded-pill text-bg-dark">Complexity Rating</span>
+        </div>
+
+    </div>
+    <div class="row mb-4">
+        <div class="col">
+        <p class="text-start">
+            {{ boardgame.description }}
+        </p>
+        </div>
+    </div>
+</div>
+
+
+{% if boardgame.owner == request.user.profile %}
+<div class="mt-3">
+    <a href="{% url 'game_board:edit_boardgame' boardgame.id %}"><button type="button" class="btn btn-outline-dark"><i class="bi bi-pencil-square"></i>&nbsp;Edit</button></a>
+    {% if boardgame.available_status %}
+    <a href="{% url 'game_board:remove_boardgame' boardgame.id %}"><button type="button" class="btn btn-outline-danger"><i class="bi bi-exclamation-triangle"></i>&nbsp;Remove</button></a>
+    {% endif %}
+</div>
+{% endif %}
+
+<div class="mt-5 mb-5">
+<h3>Comments:</h3>
+<p>
+    <a class="btn btn-danger" href="{% url 'game_board:new_comment' boardgame.id %}">Add new comment</a>
+</p>
+
+    {% for comment in comments %}
+    <div class="card mb-3">
+        <!-- Card header with timestamp and edit link -->
+        <h5 class="card-header">
+            {{ comment.date_added|date:'M d, Y H:i' }} by {{ comment.owner.username }}
+        </h5>
+        <!-- Card body with comment text -->
+            <div class="card-body">
+                <p>
+                <span class="badge bg-danger"><strong>{{ comment.rating }}</strong>&nbsp;points</span>
+                </p>
+                <!--
+                <p class="text-danger"> 
+                    {% if comment.rating == 5 %}
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    {% elif comment.rating == 4 %}
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    {% elif comment.rating == 3 %}
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    {% elif comment.rating == 2 %}
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    {% elif comment.rating == 1 %}
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                    {% endif %}       
+                </p>
+                -->
+
+                {{ comment.text|linebreaks }}
+                {% if comment.owner == request.user.profile %}
+                <small>
+                    <a class="btn btn-sm btn-light" href="{% url 'game_board:edit_comment' comment.id %}"><i class="bi bi-pencil-square"></i>&nbsp;
+                        Edit Comment
+                    </a>
+                </small>
+            {% endif %}
+            </div>
+            
+        </li>
+    </div>
+    {% empty %}
+        <li>There are no comment for this board game yet.</li>
+    {% endfor %}
+</div>
+{% endblock content %}

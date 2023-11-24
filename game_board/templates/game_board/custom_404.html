@@ -1,0 +1,22 @@
+{% extends "game_board/base.html" %}
+
+{% block page_header %}
+    <div class="p-3 mb-4 bg-danger text-white border rounded-3">
+        <div class="container-fluid py-4">
+            <h1 class="display-3">404</h1>
+
+            <p class="lead">Ooops, we lost...</p>
+            <p>We couldn't find the stuff you were looking for.</p>
+            {% if not request.user.is_authenticated %}
+            <p>Maybe you can register first, then move around to find something interesting...</p>
+            <a class="btn btn-primary btn-lg mt-1" href="{% url 'accounts:register' %}">Register &raquo;</a>
+            {% else %}
+            <p>Please try to find something interesting in following place...</p>
+            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                <a href="{% url 'game_board:boardgames' %}"><button type="button" class="btn btn-outline-light">Board Games</button></a>
+                <a href="{% url 'game_board:categories' %}"><button type="button" class="btn btn-outline-light">Categories</button></a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock page_header %}

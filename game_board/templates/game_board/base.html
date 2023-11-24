@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Game Board</title>
+
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-danger mb-4 border">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'game_board:index' %}">Game Board</a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <li class="nav-item">
+                        {% url 'game_board:boardgames' as url %}
+                        <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{ url }}">Board Games</a>
+                    </li>
+                    <li class="nav-item">
+                        {% url 'game_board:categories' as url %}
+                        <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{ url }}">Categories</a>
+                    </li>
+                    <li class="nav-item">
+                        {% url 'game_board:lendstatics' as url %}
+                        <a class="nav-link {% if request.path == url %}active{% endif %}" href="{{ url }}">Lend Status</a>
+                    </li>
+                </ul><!-- End of links on left side of navbar -->
+
+                <!-- Account-related links -->
+                <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+                    {% if user.is_authenticated %}
+                    <li><span class="navbar-text me-2">
+                        Hello, <a href="{% url 'game_board:profile' %}">{{ user.username }}</a>&nbsp;
+                    </span></li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:register' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:login' %}">Log in</a>
+                    </li>
+                    {% endif %}
+
+                </ul> <!-- End of account-related links -->
+                
+                {% if user.is_authenticated %}
+                    <form action="{% url 'accounts:logout' %}" method="post">
+                        {% csrf_token %}
+                        <button name="submit" class="btn btn-outline-light btn-sm">Log out</button>
+                    </form>
+                {% endif %}
+
+            </div><!-- Closes collapsible parts of navbar -->
+
+        </div><!-- Closes navbar's container -->
+    </nav><!-- End of navbar -->
+
+    <main class="container">
+        <div class="pb-2 mb-2 border-bottom">
+            {% block page_header %}
+                <!--{% include "game_board/messages.html" %}-->
+            {% endblock page_header %}
+        </div>
+        <div>
+            {% block content %}{% endblock content %}
+        </div>
+    </main>
+    
+</body>
+</html>
+
+
+
+
+
+    

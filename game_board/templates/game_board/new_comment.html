@@ -1,0 +1,17 @@
+{% extends "game_board/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block page_header %}
+<h3><a style="text-decoration: none;" class="link-danger" href="{% url 'game_board:boardgame' boardgame.id %}">{{ boardgame }} &raquo;</a></h3>
+<p class="lead">Share your comment, help others.</p>
+{% endblock page_header %}
+
+{% block content %}
+    <form action="{% url 'game_board:new_comment' boardgame.id %}" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class="btn btn-danger" type="submit" value="Add Comment">Publish</button>
+    </form>
+
+<div class="mb-5"></div>
+{% endblock content %}
